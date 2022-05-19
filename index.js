@@ -50,7 +50,7 @@ app.get("/createtable/category", (req, res) => {
 //create categoryproducts table
 app.get("/createtable/categoryproducts", (req, res) => {
   let sql =
-    "CREATE TABLE categoryproducts(id int AUTO_INCREMENT, category_id INT, products_id INT, PRIMARY KEY(id), foreign key (category_id) references category(id), foreign key (products_id) references products(id))";
+    "CREATE TABLE categoryproducts(id int AUTO_INCREMENT, category_id INT, products_id INT, PRIMARY KEY(id), foreign key (category_id) references category(id), foreign key (products_id) references products(id) ON DELETE CASCADE)";
   db.query(sql, (err, result) => {
     if (err) throw err;
     console.log(result);
@@ -173,10 +173,10 @@ WHERE category.id= ${req.params.id}`;
   });
 });
 
-// Crea un endpoint donde puedas buscar un producto por su nombre not finished
+// Crea un endpoint donde puedas buscar un producto por su nombre ....not finished
 app.get("/searchproduct/:name", (req, res) => {
-  let sql = `SELECT * FROM products 
-WHERE products.name= ${req.params.name}`;
+  let sql = `SELECT * FROM products WHERE products.name = '${req.params.name}'`;
+  console.log(sql);
   db.query(sql, (err, result) => {
     if (err) throw err;
     res.send(result);
@@ -184,6 +184,16 @@ WHERE products.name= ${req.params.name}`;
 });
 
 
+// Crea un endpoint donde puedas eliminar un producto por su id
+
+
+app.delete("/delete/:id", (req, res) => {
+  let sql = `DELETE FROM products WHERE id = ${req.params.id}`;
+  db.query(sql, (err, result) => {
+    if (err) throw err;
+    res.send("Post deleted");
+  });
+});
 
 
 app.listen(port, () => console.log(`Server running in the port ${port}`));
